@@ -1,13 +1,13 @@
 services:
   service_a:
-    image: ghcr.io/liamnooneatu/CICD2-Car-Parts-Project-Parts/service_a:latest
+    image: ghcr.io/liamnooneatu/cicd-car-parts-project/service_a:latest
     ports:
       - "8001:8000"
     networks:
       - labnet
 
   service_b:
-    image: ghcr.io/liamnooneatu/CICD2-Car-Parts-Project-Parts/service_b:latest
+    image: ghcr.io/liamnooneatu/cicd2-car-parts-projetc-parts/service_b:latest
     env_file: ./.env
     depends_on:
       - service_a
