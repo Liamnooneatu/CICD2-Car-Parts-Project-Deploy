@@ -1,20 +1,51 @@
 services:
   service_a:
-    image: ghcr.io/liamnooneatu/cicd-car-parts-project/service_a:latest
+    image: ghcr.io/liamnooneatu/cicd2-car-parts-project/service_a:latest
     ports:
       - "8001:8000"
     networks:
       - labnet
 
   service_b:
-    image: ghcr.io/liamnooneatu/cicd2-car-parts-projetc-parts/service_b:latest
+    image: ghcr.io/liamnooneatu/cicd2-car-parts-project-parts/service_b:latest
     env_file: ./.env
     depends_on:
       - service_a
     ports:
       - "8002:8000"
+    environment:
+      SERVICE_A_BASE_URL: "http://service_a:8000"
     networks:
       - labnet
- 
+
+  service_c:
+    image: ghcr.io/liamnooneatu/cicd2-car-parts-project-orders/service_c:latest
+    env_file: ./.env
+    depends_on:
+      - service_a
+    ports:
+      - "8003:8000"
+    networks:
+      - labnet    
+    environment:
+      PARTS_BASE_URL: "http://service_a:8000"
+
+  service_d:
+    image: ghcr.io/liamnooneatu/cicd2-car-parts-project-returns/service_d:latest
+    ports:
+      - "8004:8000"
+    env_file: ./.env
+    environment:
+      ORDERS_BASE_URL: "http://service_c:8000"      
+    volumes:
+      - returns_data:/data
+    networks:
+      - labnet
+    depends_on:
+      - service_c
+
+volumes:
+  returns_data:
+
 networks:
   labnet:
